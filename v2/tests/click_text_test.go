@@ -7,9 +7,9 @@ import (
 	"log"
 	"testing"
 
+	"github.com/admpub/go-captcha/v2/base/option"
+	"github.com/admpub/go-captcha/v2/click"
 	"github.com/golang/freetype/truetype"
-	"github.com/wenlng/go-captcha/v2/base/option"
-	"github.com/wenlng/go-captcha/v2/click"
 )
 
 var textCapt click.Captcha

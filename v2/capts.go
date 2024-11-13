@@ -7,9 +7,9 @@
 package v2
 
 import (
-	"github.com/wenlng/go-captcha/v2/click"
-	"github.com/wenlng/go-captcha/v2/rotate"
-	"github.com/wenlng/go-captcha/v2/slide"
+	"github.com/admpub/go-captcha/v2/click"
+	"github.com/admpub/go-captcha/v2/rotate"
+	"github.com/admpub/go-captcha/v2/slide"
 )
 
 // NewClickBuilder .

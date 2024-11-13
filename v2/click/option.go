@@ -7,8 +7,8 @@
 package click
 
 import (
-	"github.com/wenlng/go-captcha/v2/base/logger"
-	"github.com/wenlng/go-captcha/v2/base/option"
+	"github.com/admpub/go-captcha/v2/base/logger"
+	"github.com/admpub/go-captcha/v2/base/option"
 	"golang.org/x/image/font"
 )
 
