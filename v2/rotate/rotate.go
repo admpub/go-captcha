@@ -17,9 +17,6 @@ import (
 	"github.com/wenlng/go-captcha/v2/base/random"
 )
 
-// Version # of captcha
-const Version = "2.0.2"
-
 // Captcha .
 type Captcha interface {
 	setOptions(opts ...Option)
@@ -30,12 +27,11 @@ type Captcha interface {
 
 var _ Captcha = (*captcha)(nil)
 
-var EmptyImageErr = errors.New("no image")
-var ImageTypeErr = errors.New("image must be is image.Image type")
+var ErrEmptyImage = errors.New("no image")
+var ErrImageType = errors.New("image must be is image.Image type")
 
 // captcha .
 type captcha struct {
-	version   string
 	logger    logger.Logger
 	drawImage DrawImage
 	opts      *Options
@@ -45,7 +41,6 @@ type captcha struct {
 // newRotate .
 func newRotate(opts ...Option) Captcha {
 	capt := &captcha{
-		version:   Version,
 		logger:    logger.New(),
 		drawImage: NewDrawImage(),
 		opts:      NewOptions(),
@@ -173,11 +168,11 @@ func (c *captcha) genBlock(imageSize int, thumbImageSquareSize int) *Block {
 // check is to check the captcha parameter
 func (c *captcha) check() error {
 	if len(c.resources.rangImages) == 0 {
-		return EmptyImageErr
+		return ErrEmptyImage
 	}
 	for _, img := range c.resources.rangImages {
 		if img == nil {
-			return ImageTypeErr
+			return ErrImageType
 		}
 	}
 	return nil

@@ -14,8 +14,8 @@ import (
 	"golang.org/x/image/font"
 )
 
-var ColorLenErr = errors.New("the color length must be less than or equal to 255")
-var RangeVerifyLenErr = errors.New("the max value of 'rangeVerifyLen' must be less than or equal to the min value of 'rangeLen'")
+var ErrColorLen = errors.New("the color length must be less than or equal to 255")
+var ErrRangeVerifyLen = errors.New("the max value of 'rangeVerifyLen' must be less than or equal to the min value of 'rangeLen'")
 
 // Options .
 type Options struct {
@@ -241,7 +241,7 @@ func WithRangeSize(val option.RangeVal) Option {
 func WithRangeColors(colors []string) Option {
 	return func(opts *Options) {
 		if len(colors) > 255 {
-			logger.Warnf("withRangeColors(): %v", ColorLenErr)
+			logger.Warnf("withRangeColors(): %v", ErrColorLen)
 			return
 		}
 
@@ -295,7 +295,7 @@ func WithRangeThumbImageSize(val option.Size) Option {
 func WithRangeVerifyLen(val option.RangeVal) Option {
 	return func(opts *Options) {
 		if val.Max > opts.rangeLen.Min {
-			logger.Warnf("withRangeVerifyLen(): %v", RangeVerifyLenErr)
+			logger.Warnf("withRangeVerifyLen(): %v", ErrRangeVerifyLen)
 			return
 		}
 
@@ -321,7 +321,7 @@ func WithRangeThumbSize(val option.RangeVal) Option {
 func WithRangeThumbColors(val []string) Option {
 	return func(opts *Options) {
 		if len(val) > 255 {
-			logger.Warnf("WithRangeThumbColors(): %v", ColorLenErr)
+			logger.Warnf("WithRangeThumbColors(): %v", ErrColorLen)
 			return
 		}
 		opts.rangeThumbColors = val
@@ -332,7 +332,7 @@ func WithRangeThumbColors(val []string) Option {
 func WithRangeThumbBgColors(val []string) Option {
 	return func(opts *Options) {
 		if len(val) > 255 {
-			logger.Warnf("withRangeThumbBgColors(): %v", ColorLenErr)
+			logger.Warnf("withRangeThumbBgColors(): %v", ErrColorLen)
 			return
 		}
 

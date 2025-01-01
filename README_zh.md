@@ -1,7 +1,7 @@
 <div align="center">
 <img width="120" style="padding-top: 50px; margin: 0;" src="http://47.104.180.148/go-captcha/gocaptcha_logo.svg?v=1"/>
 <h1 style="margin: 0; padding: 0">Go Captcha</h1>
-<p>行为式安全验证码</p>
+<p>行为验证码</p>
 <a href="https://goreportcard.com/report/github.com/wenlng/go-captcha"><img src="https://goreportcard.com/badge/github.com/wenlng/go-captcha"/></a>
 <a href="https://godoc.org/github.com/wenlng/go-captcha"><img src="https://godoc.org/github.com/wenlng/go-captcha?status.svg"/></a>
 <a href="https://github.com/wenlng/go-captcha/releases"><img src="https://img.shields.io/github/v/release/wenlng/go-captcha.svg"/></a>
@@ -15,10 +15,12 @@
 > [English](README.md) | 中文 
 
 <p style="text-align: center">
-<a style="font-weight: bold" href="https://github.com/wenlng/go-captcha">Go Captcha</a> 是一个简洁易用、交互友好、高安全的行为式验证码库 (Golang)，支持文本/图形点选、滑动/拖拽、旋转等验证模式。
+<a style="font-weight: bold" href="https://github.com/wenlng/go-captcha">Go Captcha</a> 是行为式验证码，支持文本/图形点选、滑动/拖拽、旋转等验证模式。
 </p>
 
 <p style="text-align: center"> ⭐️ 如果能帮助到你，请随手给点一个star</p>
+<p style="text-align: center">QQ交流群：178498936</p>
+
 
 <br/>
 
@@ -30,14 +32,15 @@
 
 - GoCaptcha：[https://github.com/wenlng/go-captcha](https://github.com/wenlng/go-captcha)
 - GoCaptcha 文档：[http://gocaptcha.wencodes.com](http://gocaptcha.wencodes.com)
-- 后端Go实例：[https://github.com/wenlng/go-captcha-example](https://github.com/wenlng/go-captcha-example)
-- Go内嵌素材资源：[https://github.com/wenlng/go-captcha-assets](https://github.com/wenlng/go-captcha-assets)
+- Golang 内嵌素材资源：[https://github.com/wenlng/go-captcha-assets](https://github.com/wenlng/go-captcha-assets)
+- Golang/前端的实例：[https://github.com/wenlng/go-captcha-example](https://github.com/wenlng/go-captcha-example)
+- 在线演示 URL：[http://gocaptcha.wencodes.com/demo/](http://gocaptcha.wencodes.com/demo/)
+- Javascript 原生库：[https://github.com/wenlng/go-captcha-jslib](https://github.com/wenlng/go-captcha-jslib)
 - Vue Package：[https://github.com/wenlng/go-captcha-vue](https://github.com/wenlng/go-captcha-vue)
 - React Package：[https://github.com/wenlng/go-captcha-react](https://github.com/wenlng/go-captcha-react)
 - Angular Package：[https://github.com/wenlng/go-captcha-angular](https://github.com/wenlng/go-captcha-angular)
 - Svelte Package：[https://github.com/wenlng/go-captcha-svelte](https://github.com/wenlng/go-captcha-svelte)
 - Solid Package：[https://github.com/wenlng/go-captcha-solid](https://github.com/wenlng/go-captcha-solid)
-- 在线演示：[http://gocaptcha.wencodes.com/demo/](http://gocaptcha.wencodes.com/demo/)
 - ...
 
 <br/>
@@ -81,7 +84,7 @@ func main(){
 
 <br />
 
-## 🖖点选式验证码
+## 🖖点选式
 ### 快速使用
 ```go
 package main
@@ -163,18 +166,31 @@ func main() {
 	dots, _ := json.Marshal(dotData)
 	fmt.Println(">>>>> ", string(dots))
 
-	err = captData.GetMasterImage().SaveToFile("../resources/master.jpg", option.QualityNone)
+	var mBase64, tBase64 string
+	mBase64, err = captData.GetMasterImage().ToBase64()
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = captData.GetThumbImage().SaveToFile("../resources/thumb.png")
+	tBase64, err = captData.GetThumbImage().ToBase64()
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	fmt.Println(">>>>> ", mBase64)
+	fmt.Println(">>>>> ", tBase64)
+	
+	//err = captData.GetMasterImage().SaveToFile("../resources/master.jpg", option.QualityNone)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//err = captData.GetThumbImage().SaveToFile("../resources/thumb.png")
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 }
 ```
 
-### 创建实例方法
+### 创建实例
 - builder.Make()  中文文本、字母数字混合点选
 - builder.MakeWithShape()  图形点选
 
@@ -218,7 +234,7 @@ func main() {
 
 <br />
 
-## 🖖 滑动式验证码
+## 🖖 滑动/拖拽式
 ### 快速使用
 ```go
 package main
@@ -302,14 +318,27 @@ func main() {
 	block, _ := json.Marshal(blockData)
 	fmt.Println(">>>>>", string(block))
 
-	err = captData.GetMasterImage().SaveToFile("../resources/master.jpg", option.QualityNone)
+	var mBase64, tBase64 string
+	mBase64, err = captData.GetMasterImage().ToBase64()
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = captData.GetTileImage().SaveToFile("../resources/thumb.png")
+	tBase64, err = captData.GetTileImage().ToBase64()
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	fmt.Println(">>>>> ", mBase64)
+	fmt.Println(">>>>> ", tBase64)
+	
+	//err = captData.GetMasterImage().SaveToFile("../resources/master.jpg", option.QualityNone)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//err = captData.GetTileImage().SaveToFile("../resources/thumb.png")
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 }
 
 func loadPng(p string) (image.Image, error) {
@@ -322,9 +351,9 @@ func loadPng(p string) (image.Image, error) {
 ```
 
 
-### 创建实例方法
+### 创建实例
 - builder.Make() 滑动式
-- builder.MakeWithRegion()  区域内拖拽滑动式
+- builder.MakeWithRegion()  区域内拖拽式
 
 
 ### 配置选项
@@ -351,7 +380,7 @@ func loadPng(p string) (image.Image, error) {
 
 <br />
 
-## 🖖  旋转式验证码
+## 🖖  旋转式
 ### 快速使用
 ```go
 package main
@@ -407,14 +436,27 @@ func main() {
 	block, _ := json.Marshal(blockData)
 	fmt.Println(">>>>>", string(block))
 
-	err = captData.GetMasterImage().SaveToFile("../resources/master.png")
+	var mBase64, tBase64 string
+	mBase64, err = captData.GetMasterImage().ToBase64()
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = captData.GetThumbImage().SaveToFile("../resources/thumb.png")
+	tBase64, err = captData.GetThumbImage().ToBase64()
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	fmt.Println(">>>>> ", mBase64)
+	fmt.Println(">>>>> ", tBase64)
+	
+	//err = captData.GetMasterImage().SaveToFile("../resources/master.png")
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//err = captData.GetThumbImage().SaveToFile("../resources/thumb.png")
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 }
 
 func loadPng(p string) (image.Image, error) {
@@ -427,7 +469,7 @@ func loadPng(p string) (image.Image, error) {
 ```
 
 
-### 创建实例方法
+### 创建实例
 - builder.Make() 旋转式
 
 
@@ -451,50 +493,49 @@ func loadPng(p string) (image.Image, error) {
 
 <br/>
 
-## 验证码图片
+## 验证码图像
 
 ### JPEGImageData
-- Get() image.Image  获取原图像
-- ToBytes() ([]byte, error)  转为JPEG字节数组
-- ToBytesWithQuality(imageQuality int) ([]byte, error)   指定清晰度转为JPEG字节数组
-- ToBase64() (string, error)  转为 JPEG Base64 字符串
-- ToBase64Data() (string, error)  转为 JPEG Base64 字符串，带 "data:image/jpeg;base64," 前缀
-- ToBase64WithQuality(imageQuality int) (string, error)   指定清晰度转为 JPEG Base64 字符串
-- ToBase64DataWithQuality(imageQuality int) (string, error)   指定清晰度转为 JPEG Base64 字符串，带 "data:image/jpeg;base64," 前缀
-- SaveToFile(filepath string, quality int) error 保存 JPEG 到文件
-
+- Get() image.Image   <span style='padding: 0 10px'></span>获取原图像
+- ToBytes() ([]byte, error)   <span style='padding: 0 10px'></span>转为字节数组
+- ToBytesWithQuality(imageQuality int) ([]byte, error)    指定清晰度转为字节数组
+- ToBase64() (string, error)   <span style='padding: 0 10px'></span>转为 Base64 字符串，带 <span style='color:#ed4630;'>"data:image/jpeg;base64,"</span> 前缀
+- ToBase64Data() (string, error)   <span style='padding: 0 10px'></span>转为 Base64 字符串
+- ToBase64WithQuality(imageQuality int)  (string, error)   <span style='padding: 0 10px'></span>指定清晰度转为 Base64 字符串，带 <span style='color:#ed4630;'>"data:image/jpeg;base64,"</span> 前缀
+- ToBase64DataWithQuality(imageQuality int) (string, error)    <span style='padding: 0 10px'></span>指定清晰度转为 Base64 字符串
+- SaveToFile(filepath string, quality int) error  <span style='padding: 0 10px'></span>保存 JPEG 到文件
 
 ### PNGImageData
-- Get() image.Image  获取原图像
-- ToBytes() ([]byte, error)  转为PNG字节数组
-- ToBase64() (string, error)   转为 PNG Base64 字符串
-- ToBase64Data() (string, error)   转为 PNG Base64 字符串，带 "data:image/png;base64," 前缀
-- SaveToFile(filepath string) error  保存 PNG 到文件
+- Get() image.Image   <span style='padding: 0 10px'></span>获取原图像
+- ToBytes() ([]byte, error)   <span style='padding: 0 10px'></span>转为字节数组
+- ToBase64() (string, error)    <span style='padding: 0 10px'></span>转为 Base64 字符串，带 <span style='color:#ed4630;'>"data:image/png;base64,"</span> 前缀
+- ToBase64Data() (string, error)    <span style='padding: 0 10px'></span>转为 Base64 字符串
+- SaveToFile(filepath string) error   <span style='padding: 0 10px'></span>保存 到文件
 
 <br/>
 
 ## 验证模块
-- <p>文字点选式 ✔</p>
-- <p>图形点选式 ✔</p>
-- <p>滑动式 ✔ </p>
-- <p>拖拽式 ✔ </p>
-- <p>旋转式 ✔ </p>
+-  文字点选式 
+-  图形点选式
+-  滑动式
+-  拖拽式
+-  旋转式
 
 <br />
 
-## B端 / C端 依赖包
-- <p>Web Native ✔</p>
-- <p>Vue ✔</p>
-- <p>React ✔</p>
-- <p>Angular ✔</p>
-- <p>Solid ✔</p>
-- <p>Svelte ✔</p>
-- <p>MinProgram</p>
-- <p>UniApp</p>
-- <p>Flutter App</p>
-- <p>Android App</p>
-- <p>IOS App</p>
-- <p>... </p>
+## 前端安装包
+- [x] JavaScript
+- [x] Vue
+- [x] React
+- [x] Angular
+- [x] Svelte
+- [x] Solid
+- [ ] MinProgram
+- [ ] UniApp
+- [ ] Flutter App
+- [ ] Android App
+- [ ] IOS App
+- [ ] ...
 
 <br/>
 
