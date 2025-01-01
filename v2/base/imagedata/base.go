@@ -15,8 +15,8 @@ import (
 	"path"
 )
 
-var ImageEmptyErr = errors.New("image is empty")
-var ImageMissingDataErr = errors.New("missing image data")
+var ErrImageEmpty = errors.New("image is empty")
+var ErrImageMissingData = errors.New("missing image data")
 
 // saveToFile .
 func saveToFile(img image.Image, filepath string, isTransparent bool, quality int) error {

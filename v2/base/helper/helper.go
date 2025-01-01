@@ -50,14 +50,14 @@ func HexToRgb(hex string) (int64, int64, int64) {
 	return r, g, b
 }
 
-var ColorHexFormatErr = errors.New("hex color must start with '#'")
-var ColorInvalidErr = errors.New("hexToByte component invalid")
+var ErrColorHexFormat = errors.New("hex color must start with '#'")
+var ErrColorInvalid = errors.New("hexToByte component invalid")
 
 // ParseHexColor is to turn the hex color to RGB color
 func ParseHexColor(s string) (c color.RGBA, err error) {
 	c.A = 0xff
 	if s[0] != '#' {
-		return c, ColorHexFormatErr
+		return c, ErrColorHexFormat
 	}
 
 	hexToByte := func(b byte) byte {
@@ -69,7 +69,7 @@ func ParseHexColor(s string) (c color.RGBA, err error) {
 		case b >= 'A' && b <= 'F':
 			return b - 'A' + 10
 		}
-		err = ColorInvalidErr
+		err = ErrColorInvalid
 		return 0
 	}
 
@@ -84,7 +84,7 @@ func ParseHexColor(s string) (c color.RGBA, err error) {
 		c.G = hexToByte(s[2]) * 17
 		c.B = hexToByte(s[3]) * 17
 	default:
-		err = ColorInvalidErr
+		err = ErrColorInvalid
 	}
 	return
 }

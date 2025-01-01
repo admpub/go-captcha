@@ -44,7 +44,7 @@ func (c *pngImageDta) Get() image.Image {
 // SaveToFile is to save PNG as a file
 func (c *pngImageDta) SaveToFile(filepath string) error {
 	if c.image == nil {
-		return ImageMissingDataErr
+		return ErrImageMissingData
 	}
 
 	return saveToFile(c.image, filepath, true, option.QualityNone)
@@ -53,7 +53,7 @@ func (c *pngImageDta) SaveToFile(filepath string) error {
 // ToBytes is to convert PNG into byte array
 func (c *pngImageDta) ToBytes() ([]byte, error) {
 	if c.image == nil {
-		return []byte{}, ImageEmptyErr
+		return []byte{}, ErrImageEmpty
 	}
 	return codec.EncodePNGToByte(c.image)
 }
@@ -61,7 +61,7 @@ func (c *pngImageDta) ToBytes() ([]byte, error) {
 // ToBase64Data is to convert PNG into base64
 func (c *pngImageDta) ToBase64Data() (string, error) {
 	if c.image == nil {
-		return "", ImageEmptyErr
+		return "", ErrImageEmpty
 	}
 	return codec.EncodePNGToBase64Data(c.image)
 }
@@ -69,7 +69,7 @@ func (c *pngImageDta) ToBase64Data() (string, error) {
 // ToBase64 is to convert PNG into base64
 func (c *pngImageDta) ToBase64() (string, error) {
 	if c.image == nil {
-		return "", ImageEmptyErr
+		return "", ErrImageEmpty
 	}
 	return codec.EncodePNGToBase64(c.image)
 }

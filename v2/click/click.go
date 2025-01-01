@@ -21,9 +21,6 @@ import (
 	"github.com/admpub/go-captcha/v2/base/random"
 )
 
-// Version # of captcha
-const Version = "2.0.2"
-
 // Captcha .
 type Captcha interface {
 	setOptions(opts ...Option)
@@ -41,17 +38,16 @@ const (
 
 var _ Captcha = (*captcha)(nil)
 
-var EmptyShapesErr = errors.New("empty shapes")
-var EmptyCharacterErr = errors.New("empty character")
-var CharRangeLenErr = errors.New("character length must be large than to 'rangeLen.Max'")
-var ShapesRangeLenErr = errors.New("total number of shapes must be large than to 'rangeLen.Max'")
-var ShapesTypeErr = errors.New("shape must be is image type")
-var EmptyBackgroundImageErr = errors.New("no background image")
-var ModeSupportErr = errors.New("mode not supported")
+var ErrEmptyShapes = errors.New("empty shapes")
+var ErrEmptyCharacter = errors.New("empty character")
+var ErrCharRangeLen = errors.New("character length must be large than to 'rangeLen.Max'")
+var ErrShapesRangeLen = errors.New("total number of shapes must be large than to 'rangeLen.Max'")
+var ErrShapesType = errors.New("shape must be is image type")
+var ErrEmptyBackgroundImage = errors.New("no background image")
+var ErrModeSupport = errors.New("mode not supported")
 
 // captcha .
 type captcha struct {
-	version   string
 	logger    logger.Logger
 	drawImage DrawImage
 	opts      *Options
@@ -62,7 +58,6 @@ type captcha struct {
 // newWithMode is to create a captcha
 func newWithMode(mode Mode, opts ...Option) *captcha {
 	capt := &captcha{
-		version:   Version,
 		logger:    logger.New(),
 		drawImage: NewDrawImage(),
 		mode:      mode,
@@ -189,7 +184,7 @@ func (c *captcha) genShapes() ([]string, error) {
 	length := random.RandInt(c.opts.rangeLen.Min, c.opts.rangeLen.Max)
 	shapeNames := c.genRandShape(length)
 	if len(shapeNames) == 0 {
-		return []string{}, EmptyShapesErr
+		return []string{}, ErrEmptyShapes
 	}
 	return shapeNames, nil
 }
@@ -199,7 +194,7 @@ func (c *captcha) genChars() ([]string, error) {
 	length := random.RandInt(c.opts.rangeLen.Min, c.opts.rangeLen.Max)
 	chars := c.genRandChar(length)
 	if len(chars) == 0 {
-		return []string{}, EmptyCharacterErr
+		return []string{}, ErrEmptyCharacter
 	}
 	return chars, nil
 }
@@ -274,17 +269,17 @@ func (c *captcha) genDots(imageSize *option.Size, size *option.RangeVal, values 
 func (c *captcha) check() error {
 	if c.mode == ModeText {
 		if len(c.resources.chars) < c.opts.rangeLen.Max {
-			return CharRangeLenErr
+			return ErrCharRangeLen
 		}
 		return nil
 	} else if c.mode == ModeShape {
 		if len(c.resources.shapes) < c.opts.rangeLen.Max {
-			return ShapesRangeLenErr
+			return ErrShapesRangeLen
 		}
 
 		for _, img := range c.resources.shapeMaps {
 			if img == nil {
-				return ShapesTypeErr
+				return ErrShapesType
 			}
 		}
 
@@ -292,10 +287,10 @@ func (c *captcha) check() error {
 	}
 
 	if len(c.resources.rangBackgrounds) == 0 {
-		return EmptyBackgroundImageErr
+		return ErrEmptyBackgroundImage
 	}
 
-	return ModeSupportErr
+	return ErrModeSupport
 }
 
 // rangeCheckDots is to generate random detection points

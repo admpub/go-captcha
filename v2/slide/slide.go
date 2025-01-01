@@ -19,9 +19,6 @@ import (
 	"github.com/admpub/go-captcha/v2/base/random"
 )
 
-// Version # of captcha
-const Version = "2.0.2"
-
 type Mode int
 
 const (
@@ -39,16 +36,15 @@ type Captcha interface {
 
 var _ Captcha = (*captcha)(nil)
 
-var GraphImageErr = errors.New("graph image is incorrect")
-var GenerateDataErr = errors.New("generate data failed")
-var ImageTypeErr = errors.New("tile image must be is image.Image type")
-var ShadowImageTypeErr = errors.New("tile shadow image must be is image.Image type")
-var MaskImageTypeErr = errors.New("tile shadow image must be is image.Image type")
-var EmptyBackgroundImageErr = errors.New("no background image")
+var ErrGraphImage = errors.New("graph image is incorrect")
+var ErrGenerateData = errors.New("generate data failed")
+var ErrImageType = errors.New("tile image must be is image.Image type")
+var ErrShadowImageType = errors.New("tile shadow image must be is image.Image type")
+var ErrMaskImageType = errors.New("tile shadow image must be is image.Image type")
+var ErrEmptyBackgroundImage = errors.New("no background image")
 
 // captcha .
 type captcha struct {
-	version   string
 	logger    logger.Logger
 	drawImage DrawImage
 	opts      *Options
@@ -59,7 +55,6 @@ type captcha struct {
 // newWithMode .
 func newWithMode(mode Mode, opts ...Option) Captcha {
 	capt := &captcha{
-		version:   Version,
 		logger:    logger.New(),
 		drawImage: NewDrawImage(),
 		opts:      NewOptions(),
@@ -107,7 +102,7 @@ func (c *captcha) Generate() (CaptchaData, error) {
 
 	overlayImage, shadowImage, maskImage := c.genGraph()
 	if overlayImage == nil || shadowImage == nil || maskImage == nil {
-		return nil, GraphImageErr
+		return nil, ErrGraphImage
 	}
 
 	blocks, tilePoint := c.genGraphBlocks(c.opts.imageSize, c.opts.rangeGraphSize, c.opts.genGraphNumber)
@@ -123,7 +118,7 @@ func (c *captcha) Generate() (CaptchaData, error) {
 	}
 
 	if block == nil {
-		return nil, GenerateDataErr
+		return nil, ErrGenerateData
 	}
 
 	var masterImage, masterBgImage, tileImage image.Image
@@ -316,16 +311,16 @@ func (c *captcha) genGraph() (maskImage, shadowImage, templateImage image.Image)
 func (c *captcha) check() error {
 	for _, tile := range c.resources.rangGraphImage {
 		if tile.OverlayImage == nil {
-			return ImageTypeErr
+			return ErrImageType
 		} else if tile.ShadowImage == nil {
-			return ShadowImageTypeErr
+			return ErrShadowImageType
 		} else if tile.MaskImage == nil {
-			return MaskImageTypeErr
+			return ErrMaskImageType
 		}
 	}
 
 	if len(c.resources.rangBackgrounds) == 0 {
-		return EmptyBackgroundImageErr
+		return ErrEmptyBackgroundImage
 	}
 
 	return nil

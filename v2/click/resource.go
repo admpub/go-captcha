@@ -7,6 +7,7 @@
 package click
 
 import (
+	"errors"
 	"image"
 
 	"github.com/admpub/go-captcha/v2/base/helper"
@@ -30,6 +31,9 @@ func NewResources() *Resources {
 
 type Resource func(*Resources)
 
+var ErrChineseCharLen = errors.New("the chinese char length must be equal to 1")
+var ErrCharLen = errors.New("the char length must be less than or equal to 2")
+
 // WithChars is to set characters
 func WithChars(chars []string) Resource {
 	return func(resources *Resources) {
@@ -37,11 +41,11 @@ func WithChars(chars []string) Resource {
 			for _, char := range chars {
 				if helper.IsChineseChar(char) {
 					if helper.LenChineseChar(char) > 1 {
-						logger.Errorf("WithChars error: the chinese char [%s] must be equal to 1", char)
+						logger.Errorf("WithChars error: %v [%s]", ErrChineseCharLen, char)
 						return
 					}
 				} else if helper.LenChineseChar(char) > 2 {
-					logger.Errorf("WithChars error: the char [%s] must be less than or equal to 2", char)
+					logger.Errorf("WithChars error: %v [%s]", ErrCharLen, char)
 					return
 				}
 			}
