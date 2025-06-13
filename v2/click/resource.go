@@ -15,6 +15,7 @@ import (
 	"github.com/golang/freetype/truetype"
 )
 
+// Resources defines the resources for the CAPTCHA
 type Resources struct {
 	chars                []string
 	shapeMaps            map[string]image.Image

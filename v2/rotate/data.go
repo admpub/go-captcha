@@ -8,14 +8,14 @@ package rotate
 
 import "github.com/admpub/go-captcha/v2/base/imagedata"
 
-// CaptchaData .
+// CaptchaData defines the interface for rotate CAPTCHA data
 type CaptchaData interface {
 	GetData() *Block
 	GetMasterImage() imagedata.PNGImageData
 	GetThumbImage() imagedata.PNGImageData
 }
 
-// CaptData .
+// CaptData is the concrete implementation of the CaptchaData interface
 type CaptData struct {
 	block       *Block
 	masterImage imagedata.PNGImageData
