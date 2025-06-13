@@ -14,7 +14,7 @@ import (
 	"golang.org/x/image/draw"
 )
 
-// DrawImageParams .
+// DrawImageParams defines the parameters for drawing the main image
 type DrawImageParams struct {
 	Rotate     int
 	SquareSize int
@@ -22,7 +22,7 @@ type DrawImageParams struct {
 	Alpha      float32
 }
 
-// DrawCropCircleImageParams .
+// DrawCropCircleImageParams defines the parameters for drawing a cropped circle image
 type DrawCropCircleImageParams struct {
 	ScaleRatioSize int
 	Rotate         int
@@ -31,7 +31,7 @@ type DrawCropCircleImageParams struct {
 	Alpha          float32
 }
 
-// DrawImage .
+// DrawImage defines the interface for drawing images
 type DrawImage interface {
 	DrawWithNRGBA(params *DrawImageParams) (img image.Image, err error)
 	DrawWithCropCircle(params *DrawCropCircleImageParams) (image.Image, error)
@@ -39,24 +39,31 @@ type DrawImage interface {
 
 var _ DrawImage = (*drawImage)(nil)
 
-// NewDrawImage .
+// drawImage is the concrete implementation of the DrawImage interface
+type drawImage struct {
+}
+
+// NewDrawImage creates a new DrawImage instance
+// return: DrawImage interface instance
 func NewDrawImage() DrawImage {
 	return &drawImage{}
 }
 
-// drawImage .
-type drawImage struct {
-}
-
-// DrawWithCropCircle is to draw a crop circle
+// DrawWithCropCircle draws a cropped circle image (thumbnail)
+// params:
+//   - params: Drawing parameters
+//
+// returns:
+//   - image.Image: Drawn thumbnail image
+//   - error: Error information
 func (d *drawImage) DrawWithCropCircle(params *DrawCropCircleImageParams) (image.Image, error) {
 	bgImage := params.Background
 
 	bgBounds := bgImage.Bounds()
 	cvs := canvas.CreateNRGBACanvas(bgImage.Bounds().Dx(), bgImage.Bounds().Dy(), true)
 	draw.Draw(cvs.Get(), bgImage.Bounds(), bgImage, image.Point{}, draw.Over)
-	cvs.CropCircle(bgImage.Bounds().Dx()/2, bgImage.Bounds().Dy()/2, bgImage.Bounds().Dy()/2, params.ScaleRatioSize)
-	cvs.Rotate(params.Rotate)
+	cvs.CropScaleCircle(bgImage.Bounds().Dx()/2, bgImage.Bounds().Dy()/2, bgImage.Bounds().Dy()/2, params.ScaleRatioSize)
+	cvs.Rotate(params.Rotate, true)
 
 	cvBounds := cvs.Bounds()
 	if cvBounds.Dy() > bgBounds.Dy() || cvBounds.Dx() > bgBounds.Dx() {
@@ -65,10 +72,16 @@ func (d *drawImage) DrawWithCropCircle(params *DrawCropCircleImageParams) (image
 		cvs = newCvs
 	}
 
-	return cvs, nil
+	return cvs.Get(), nil
 }
 
-// DrawWithNRGBA is to draw with a NRGBA
+// DrawWithNRGBA draws the main CAPTCHA image using NRGBA format
+// params:
+//   - params: Drawing parameters
+//
+// return:
+//   - image.Image: Drawn image
+//   - error: Error information
 func (d *drawImage) DrawWithNRGBA(params *DrawImageParams) (img image.Image, err error) {
 	var rcm = canvas.CreateNRGBACanvas(params.SquareSize, params.SquareSize, true)
 	if params.Background != nil {
@@ -81,6 +94,6 @@ func (d *drawImage) DrawWithNRGBA(params *DrawImageParams) (img image.Image, err
 		draw.Draw(rcm.Get(), rcm.Bounds(), rc.Get(), image.Point{}, draw.Over)
 	}
 
-	rcm.CropCircle(rcm.Bounds().Dx()/2, rcm.Bounds().Dy()/2, rcm.Bounds().Dy()/2, 0)
-	return rcm, nil
+	rcm.CropCircle(rcm.Bounds().Dx()/2, rcm.Bounds().Dy()/2, rcm.Bounds().Dy()/2)
+	return rcm.Get(), nil
 }

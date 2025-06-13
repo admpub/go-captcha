@@ -18,7 +18,7 @@ import (
 	"github.com/wenlng/go-captcha/v2/base/random"
 )
 
-// t2x is to turn to hex
+// t2x converts an integer to a hexadecimal string
 func t2x(t int64) string {
 	result := strconv.FormatInt(t, 16)
 	if len(result) == 1 {
@@ -27,14 +27,14 @@ func t2x(t int64) string {
 	return result
 }
 
-// FormatAlpha is formatting transparent
+// FormatAlpha formats the alpha value
 func FormatAlpha(val float32) uint8 {
 	a := math.Min(float64(val), 1)
 	alpha := a * 255
 	return uint8(alpha)
 }
 
-// RgbToHex is to turn RBG color to hex color
+// RgbToHex converts RGB color to hexadecimal color
 func RgbToHex(red int64, green int64, blue int64) string {
 	r := t2x(red)
 	g := t2x(green)
@@ -42,7 +42,7 @@ func RgbToHex(red int64, green int64, blue int64) string {
 	return r + g + b
 }
 
-// HexToRgb is to turn hex color to RBG color
+// HexToRgb converts hexadecimal color to RGB color
 func HexToRgb(hex string) (int64, int64, int64) {
 	r, _ := strconv.ParseInt(hex[:2], 16, 10)
 	g, _ := strconv.ParseInt(hex[2:4], 16, 18)
@@ -53,7 +53,7 @@ func HexToRgb(hex string) (int64, int64, int64) {
 var ErrColorHexFormat = errors.New("hex color must start with '#'")
 var ErrColorInvalid = errors.New("hexToByte component invalid")
 
-// ParseHexColor is to turn the hex color to RGB color
+// ParseHexColor converts a hex color to an RGBA color
 func ParseHexColor(s string) (c color.RGBA, err error) {
 	c.A = 0xff
 	if s[0] != '#' {
@@ -89,7 +89,7 @@ func ParseHexColor(s string) (c color.RGBA, err error) {
 	return
 }
 
-// PathExists is to detect whether the file exists
+// PathExists checks if a file path exists
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -101,7 +101,7 @@ func PathExists(path string) (bool, error) {
 	return false, err
 }
 
-// InArrayWithStr is the verification whether it is in the array
+// InArrayWithStr checks if a string is in an array
 func InArrayWithStr(items []string, s string) bool {
 	for _, item := range items {
 		if item == s {
@@ -111,7 +111,7 @@ func InArrayWithStr(items []string, s string) bool {
 	return false
 }
 
-// IsChineseChar is to detect whether it is Chinese
+// IsChineseChar checks if a string contains Chinese characters
 func IsChineseChar(str string) bool {
 	for _, r := range str {
 		if unicode.Is(unicode.Scripts["Han"], r) {
@@ -121,12 +121,12 @@ func IsChineseChar(str string) bool {
 	return false
 }
 
-// LenChineseChar is to calc Chinese and letter length
+// LenChineseChar calculates the character length of a string (supports Chinese)
 func LenChineseChar(str string) int {
 	return utf8.RuneCountInString(str)
 }
 
-// RandIndex is to the random length range value
+// RandIndex generates a random index
 func RandIndex(length int) int {
 	if length == 0 {
 		return -1

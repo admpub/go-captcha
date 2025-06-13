@@ -15,6 +15,7 @@ import (
 	"github.com/wenlng/go-captcha/v2/base/logger"
 )
 
+// Resources defines the resources for the CAPTCHA
 type Resources struct {
 	chars                []string
 	shapeMaps            map[string]image.Image
